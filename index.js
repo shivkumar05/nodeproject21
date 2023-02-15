@@ -62,6 +62,32 @@ app.post("/:userId/userProfile", commnMid.jwtValidation, commnMid.authorization,
         })
     }
 });
+//============================[Update User Profile]=======================
+app.put("/:userId/UpdateProfile", commnMid.jwtValidation, commnMid.authorization, upload.single('image'), async (req, res) => {
+    try {
+        let data = req.body;
+        let file = req.file;
+        let userid = req.params.userId;
+
+        data.image = `/image/${file.filename}`;
+
+        let user = await userprofile.findOneAndUpdate({ userId: userid }, {
+            $set: { image: data.image, dob: data.dob, gender: data.gender, email: data.email, contact: data.contact, height: data.height, weight: data.weight }
+        }, { new: true });
+
+        return res.status(200).send({
+            status: true,
+            message: "User Profile Updated Successfully",
+            data: user
+        })
+    }
+    catch (error) {
+        return res.status(500).send({
+            status: false,
+            message: error.message
+        })
+    }
+})
 //===============================[ Get Image]===============================
 
 app.get("/:userId/getImage", commnMid.jwtValidation, commnMid.authorization, async (req, res) => {
@@ -335,7 +361,6 @@ app.get("/:userId/OnGoingDrill", commnMid.jwtValidation, commnMid.authorization,
         let userid = req.params.userId;
 
         let { category, title } = data;
-        // console.log(userid, "787878")
 
         let filter = {}
 
@@ -347,36 +372,20 @@ app.get("/:userId/OnGoingDrill", commnMid.jwtValidation, commnMid.authorization,
         }
 
         let OnGoingDrillCreated = await onGoingDrillModel.find({ userId: userid, $or: [data, filter] });
-        // console.log(OnGoingDrillCreated, "aaaa")
 
         let arr2 = [];
         for (let i = 0; i < OnGoingDrillCreated.length; i++) {
             arr2.push(OnGoingDrillCreated[i])
         }
-        console.log(arr2, "bbbb")
-
         let arr = [];
 
         for (var i = 0; i < OnGoingDrillCreated.length; i++) {
             data.videoId = OnGoingDrillCreated[i]._id
             arr.push(data.videoId)
         }
-        console.log(arr, "ssss")
 
         let Allrecommendations = await recommendationModel.find({ videoId: data.videoId }).select({ anecdote_no: 1, message: 1, audioFile: 1, audiolength: 1, manual: 1, createdAt: 1 });
 
-        // let obj = [{
-        //     _id: OnGoingDrillCreated._id,
-        //     title: OnGoingDrillCreated.title,
-        //     category: OnGoingDrillCreated.category,
-        //     repetation: OnGoingDrillCreated.repetation,
-        //     sets: OnGoingDrillCreated.sets,
-        //     videos: OnGoingDrillCreated.videos,
-        //     remarks: OnGoingDrillCreated.remarks,
-        //     score: OnGoingDrillCreated.score,
-        //     recommendation: Allrecommendations
-        // }];
-        // console.log(obj, "ccccc")
         return res.status(201).send({
             status: true,
             message: 'Success',

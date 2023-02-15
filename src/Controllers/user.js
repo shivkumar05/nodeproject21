@@ -201,6 +201,29 @@ const bow_bat = async function (req, res) {
         })
     }
 };
+//==========================[Update batting_bowling]======================
+let updateBat_Bow = async function (req, res) {
+    try {
+        let data = req.body;
+        let userid = req.params.userId;
+
+        let user = await bow_batModel.findOneAndUpdate({ userId: userid }, {
+            $set: { bat_hand: data.bat_hand, bowl_hand: data.bowl_hand, batting_order: data.batting_order, bowling_order: data.bowling_order, wicket_keeper: data.wicket_keeper }
+        }, { new: true });
+
+        return res.status(200).send({
+            status: true,
+            message: "Batting Bowling Updated Successfully",
+            data: user
+        })
+    }
+    catch (error) {
+        return res.status(500).send({
+            status: false,
+            message: error.message
+        })
+    }
+}
 //==========================[progress screen (batting)]==============================
 
 const createBattings = async function (req, res) {
@@ -227,6 +250,29 @@ const createBattings = async function (req, res) {
         })
     }
 };
+//==========================[Update Batting]======================
+let updateBatting = async function (req, res) {
+    try {
+        let data = req.body;
+        let userid = req.params.userId;
+
+        let user = await battingModel.findOneAndUpdate({ userId: userid }, {
+            $set: { matches: data.matches, runs: data.runs, faced: data.faced, strike_rate: data.strike_rate, fifty_hundred: data.fifty_hundred, average:data.average, level:data.level, out:data.out }
+        }, { new: true });
+
+        return res.status(200).send({
+            status: true,
+            message: "Batting Data Updated Successfully",
+            data: user
+        })
+    }
+    catch (error) {
+        return res.status(500).send({
+            status: false,
+            message: error.message
+        })
+    }
+}
 //==========================[progress screen (bowling)]==============================
 
 const createBowlings = async function (req, res) {
@@ -252,6 +298,29 @@ const createBowlings = async function (req, res) {
         })
     }
 };
+//==========================[Update Bowling]======================
+let updateBowling = async function (req, res) {
+    try {
+        let data = req.body;
+        let userid = req.params.userId;
+
+        let user = await bowlingModel.findOneAndUpdate({ userId: userid }, {
+            $set: { matches: data.matches, overs: data.overs, wickets: data.wickets, conced: data.conced, average: data.average, economy:data.economy, threeW_fiveW:data.threeW_fiveW, wicket_matche:data.wicket_matche, level:data.level, }
+        }, { new: true });
+
+        return res.status(200).send({
+            status: true,
+            message: "Bowling Data Updated Successfully",
+            data: user
+        })
+    }
+    catch (error) {
+        return res.status(500).send({
+            status: false,
+            message: error.message
+        })
+    }
+}
 //==========================[progress screen (wicket)]==============================
 
 const createWickets = async function (req, res) {
@@ -276,6 +345,29 @@ const createWickets = async function (req, res) {
         })
     }
 };
+//==========================[Update Wicket]======================
+let updateWicket = async function (req, res) {
+    try {
+        let data = req.body;
+        let userid = req.params.userId;
+
+        let user = await wicketModel.findOneAndUpdate({ userId: userid }, {
+            $set: { level:data.level, }
+        }, { new: true });
+
+        return res.status(200).send({
+            status: true,
+            message: "Wicket Data Updated Successfully",
+            data: user
+        })
+    }
+    catch (error) {
+        return res.status(500).send({
+            status: false,
+            message: error.message
+        })
+    }
+}
 //==========================[create category]==============================
 const category = async function (req, res) {
     try {
@@ -836,5 +928,5 @@ let getProgress = async function (req, res) {
 
 
 
-module.exports = { getAssignedByDrills, AcademyLogin, createUser, userLogin, getContact, createBattings, createBowlings, createWickets, bow_bat, createRoutine, deleteRoutine, getRoutine, category, getCategory, getTags, tag, getMyDrills, readinessSurvey, createPowerTest, createStrengthTest, createAcademy, updateDrill, updatePassword, getPastDrill, getPersonal, getProgress, getUsers }
+module.exports = { updateBat_Bow, getAssignedByDrills, AcademyLogin, createUser, userLogin, getContact, createBattings, updateBatting, createBowlings, updateBowling, createWickets,updateWicket, bow_bat, createRoutine, deleteRoutine, getRoutine, category, getCategory, getTags, tag, getMyDrills, readinessSurvey, createPowerTest, createStrengthTest, createAcademy, updateDrill, updatePassword, getPastDrill, getPersonal, getProgress, getUsers }
 
